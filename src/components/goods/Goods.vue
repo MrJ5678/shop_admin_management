@@ -1,0 +1,83 @@
+<template>
+<div>
+    <el-button @click="gotoGoodsAdd" type="success" plain>添加商品</el-button>
+    <el-table
+      :data="goodsData"
+      style="width: 100%">
+      <el-table-column
+        type="index"
+        label="#"
+       >
+      </el-table-column>
+      <el-table-column
+        prop="goods_name"
+        label="商品名称"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="goods_price"
+        label="商品价格"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="goods_number"
+        label="商品数量">
+      </el-table-column>
+      <el-table-column
+        prop="add_time"
+        label="创建时间">
+        <template slot-scope="scope">
+            <span>{{scope.row.add_time | dateFilter }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="address"
+        label="操作">
+      </el-table-column>
+    </el-table>
+</div>
+</template>
+
+<script>
+import moment from 'moment'
+export default {
+  data () {
+    return {
+      goodsData: [{
+        goods_name: 'tv',
+        goods_price: '1999',
+        goods_number: '30',
+        add_time: 123456
+      }]
+    }
+  },
+  created () {
+    this.loadGoodsData()
+  },
+  methods: {
+    async loadGoodsData () {
+      let res = await this.$axios.get('goods', {
+        params: {
+          query: '',
+          pagenum: 1,
+          pagesize: 4
+        }
+      })
+      //   console.log(res)
+      const {data: {data: {goods}}} = res
+      this.goodsData = goods
+    },
+    gotoGoodsAdd () {
+      this.$router.push('/goods-add')
+    }
+  },
+  filters: {
+    dateFilter (res) {
+      return moment(res).format('YYYY-MM-DD')
+    }
+  }
+}
+</script>
+
+<style>
+</style>
